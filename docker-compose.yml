@@ -5,7 +5,7 @@ services:
     ports:
       - "5432"
     environment:
-      POSTGRES_DB: thingsboard
+      POSTGRES_DB: thingsboard_new
       POSTGRES_PASSWORD: postgres
     volumes:
       - postgres-data:/var/lib/postgresql/data
@@ -39,7 +39,7 @@ services:
       - tb-net
   thingsboard-pe:
     restart: always
-    image: "thingsboard/tb-pe-node:4.1.0PE"
+    image: "thingsboard/tb-pe-node:4.2.0PE"
     ports:
       - "8080:8080"
       - "1883:1883"
@@ -57,13 +57,14 @@ services:
       TB_LICENSE_SECRET: dH0Wev5LgvePlaZ8xdvIwxu9
       TB_LICENSE_INSTANCE_DATA_FILE: /data/license.data
       REPORTS_SERVER_ENDPOINT_URL: http://tb-web-report:8383
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/thingsboard
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/thingsboard_new
       TB_QUEUE_TYPE: kafka
       TB_KAFKA_SERVERS: kafka:9092
       TB_KAFKA_MAX_REQUEST_SIZE: "1048576"
       METRICS_ENABLED: "true"
       METRICS_ENDPOINTS_EXPOSE: "prometheus"
-      MQTT_TRANSPORT_DOCKER_NAME: tb-mqtt-transport
+      DEBUG_SETTINGS_DEFAULT_DURATION_MINUTES: "250"
+      SQL_TTL_TS_EXECUTION_INTERVAL: "100000"
     volumes:
       - license-data:/data
     depends_on:
@@ -72,7 +73,7 @@ services:
       - tb-net
   tb-web-report:
     restart: always
-    image: "thingsboard/tb-pe-web-report:4.1.0PE"
+    image: "thingsboard/tb-pe-web-report:4.2.0PE"
     ports:
       - "8383"
     depends_on:
@@ -121,7 +122,8 @@ services:
     ports:
       - "3000:3000" # Expose Grafana UI
     environment:
-      - GF_SECURITY_ADMIN_PASSWORD=1007 # Replace with a secure password
+      GF_SECURITY_ADMIN_PASSWORD: "admin" # Replace with a secure password
+      GF_SECURITY_ADMIN_USER: "admin"
     volumes:
       - grafana-data:/var/lib/grafana # Persistent storage for dashboards
     networks:
