@@ -11,6 +11,15 @@ services:
       - postgres-data:/var/lib/postgresql/data
     networks:
       - tb-net
+  cassandra:
+    restart: always
+    image: "cassandra:5.0"
+    ports:
+      - "9042"
+    volumes:
+      - /cassandra:/var/lib/cassandra
+    networks:
+      - tb-net
   kafka:
     restart: always
     image: bitnami/kafka:4.0
@@ -58,6 +67,11 @@ services:
       TB_LICENSE_INSTANCE_DATA_FILE: /data/license.data
       REPORTS_SERVER_ENDPOINT_URL: http://tb-web-report:8383
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/thingsboard_new
+      ### DATABASE_TS_TYPE: cassandra
+      CASSANDRA_CLUSTER_NAME: "Test Cluster"
+      CASSANDRA_KEYSPACE_NAME: thingsboard
+      CASSANDRA_URL: cassandra:9042
+      CASSANDRA_USE_CREDENTIALS: false
       TB_QUEUE_TYPE: kafka
       TB_KAFKA_SERVERS: kafka:9092
       TB_KAFKA_MAX_REQUEST_SIZE: "1048576"
@@ -69,6 +83,7 @@ services:
       - license-data:/data
     depends_on:
       - postgres
+      - cassandra
     networks:
       - tb-net
   tb-web-report:
