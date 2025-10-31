@@ -75,7 +75,7 @@ services:
         max-file: "10"
     environment:
       TB_SERVICE_ID: tb-pe-node
-      TB_LICENSE_SECRET: dH0Wev5LgvePlaZ8xdvIwxu9
+      TB_LICENSE_SECRET: YourLicenseSecretHere
       TB_LICENSE_INSTANCE_DATA_FILE: /data/license.data
       REPORTS_SERVER_ENDPOINT_URL: http://tb-web-report:8383
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/thingsboard_new
